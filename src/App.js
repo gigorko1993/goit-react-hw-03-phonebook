@@ -1,24 +1,30 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import ContactForm from "./ContactForm";
-import Filter from "./Filter";
-import ContactList from "./ContactList";
-import s from "./App.module.css";
+import ContactForm from './ContactForm';
+import Filter from './Filter';
+import ContactList from './ContactList';
+import s from './App.module.css';
 
 class App extends Component {
   state = {
     contacts: [
-      { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-      { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-      { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-      { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
-    filter: "",
+    filter: '',
   };
 
-  addContact = (newContact) => {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
+  addContact = newContact => {
     const contactCheck = this.state.contacts.find(
-      ({ name }) => name === newContact.name
+      ({ name }) => name === newContact.name,
     );
 
     if (contactCheck !== undefined) {
@@ -26,18 +32,18 @@ class App extends Component {
       return;
     }
 
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       contacts: [newContact, ...prevState.contacts],
     }));
   };
 
-  removeContact = (id) => {
-    this.setState((prevState) => ({
-      contacts: prevState.contacts.filter((contact) => contact.id !== id),
+  removeContact = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
   };
 
-  onChange = (e) => {
+  onChange = e => {
     this.setState({
       [e.currentTarget.name]: e.currentTarget.value,
     });
@@ -46,7 +52,7 @@ class App extends Component {
   render() {
     const lowerCasedFilter = this.state.filter.toLowerCase();
     const filteredContacts = this.state.contacts.filter(({ name }) =>
-      name.toLowerCase().includes(lowerCasedFilter)
+      name.toLowerCase().includes(lowerCasedFilter),
     );
 
     return (
